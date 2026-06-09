@@ -3,9 +3,10 @@
 > **Live Demo:** [Link to Vercel here] 
 > *(Note: Replace the link above with your live Vercel URL once deployed)*
 
-> **Demo Video:** [Insert video here by dragging and dropping your MP4 file]
+> **Demo Video:** 
+> https://github.com/user-attachments/assets/2435f78b-2259-4263-8495-3cbab8ff3165
 
-Bibli Hub is a full-stack web platform where users can donate books, earn points, and use those points to claim other donated books. It promotes book reuse and sustainability within communities.
+Bibli Hub is a community-driven full-stack web platform where users can donate books, earn points, and use those points to claim other donated books. It promotes book reuse and sustainability within communities.
 
 ---
 
@@ -78,7 +79,7 @@ npm run dev
 
 ## 📁 Project Structure
 
-```
+```text
 Bibli Hub/
 ├── client/              # React frontend
 │   ├── src/
@@ -95,4 +96,11 @@ Bibli Hub/
 ```
 
 ---
+## 👨‍💻 Developed By
+
+**Achal Sangami**
+
+Built as a full-stack web application to demonstrate authentication, database management, REST API development, and responsive frontend design while promoting sustainable book sharing.
+
+*"A book shared is knowledge multiplied."* 📚
 Made with ❤️ for a greener planet 🌱

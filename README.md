@@ -178,16 +178,6 @@ SENDGRID_FROM_EMAIL=your_email
 
 If SendGrid is not configured, password reset tokens are logged to the server console for testing purposes.
 
----
-
-## 🎯 Future Improvements
-
-* Book search and filtering
-* Book recommendation system
-* Admin moderation dashboard
-* User ratings and reviews
-* Real-time notifications
-* Donation analytics
 
 ---
 

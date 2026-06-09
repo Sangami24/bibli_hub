@@ -1,0 +1,115 @@
+/* ============================================
+   Dashboard Pages (MyDonations, MyOrders)
+   ============================================ */
+
+.dashboard-page {
+  padding-bottom: var(--space-3xl);
+}
+
+.dashboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.dashboard-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.dashboard-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateX(4px);
+}
+
+.dashboard-item-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.dashboard-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboard-item-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard-item-sub {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  margin-bottom: var(--space-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard-item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.dashboard-item-date {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.dashboard-item-points {
+  flex-shrink: 0;
+}
+
+.points-earned-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--color-success);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: var(--radius-full);
+}
+
+.points-spent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  background: rgba(212, 163, 115, 0.15);
+  color: var(--color-accent-dark);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: var(--radius-full);
+}
+
+@media (max-width: 768px) {
+  .dashboard-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .dashboard-item-icon {
+    font-size: 2rem;
+  }
+
+  .dashboard-item:hover {
+    transform: none;
+  }
+}

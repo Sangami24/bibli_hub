@@ -1,0 +1,236 @@
+/* ============================================
+   Why Exchange Page Styles
+   ============================================ */
+
+.why-hero {
+  background: var(--gradient-hero);
+  padding: calc(var(--navbar-height) + var(--space-3xl)) 0 var(--space-3xl);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.why-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='5'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.why-hero-content {
+  position: relative;
+}
+
+.why-hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: white;
+  margin-bottom: var(--space-md);
+}
+
+.why-hero-subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Impact */
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+  margin-top: calc(-1 * var(--space-2xl));
+  position: relative;
+  z-index: 1;
+}
+
+.why-impact {
+  padding-top: 0;
+}
+
+.impact-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base);
+}
+
+.impact-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+
+.impact-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+}
+
+.impact-card h3 {
+  font-size: 1.8rem;
+  color: var(--color-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.impact-card p {
+  color: var(--color-text-light);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Reasons */
+.reasons-list {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.reason-item {
+  display: flex;
+  gap: var(--space-xl);
+  align-items: flex-start;
+  padding: var(--space-xl);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+}
+
+.reason-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateX(8px);
+}
+
+.reason-number {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0.3;
+}
+
+.reason-content h3 {
+  font-size: 1.2rem;
+  margin-bottom: var(--space-sm);
+}
+
+.reason-content p {
+  color: var(--color-text-light);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* Story */
+.why-story {
+  background: var(--color-bg-alt);
+}
+
+.story-card {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+.story-quote {
+  font-family: var(--font-heading);
+  font-size: 8rem;
+  font-weight: 800;
+  line-height: 0.5;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.15;
+  margin-bottom: var(--space-md);
+}
+
+.story-text {
+  font-size: 1.15rem;
+  color: var(--color-text);
+  line-height: 1.8;
+  font-style: italic;
+  margin-bottom: var(--space-xl);
+}
+
+.story-author {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.story-avatar {
+  font-size: 2.5rem;
+}
+
+.story-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.story-role {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+}
+
+/* CTA */
+.why-cta-card {
+  background: var(--gradient-hero);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3xl);
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.why-cta-card h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: white;
+  margin-bottom: var(--space-md);
+}
+
+.why-cta-card p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+  margin-bottom: var(--space-xl);
+}
+
+.why-cta-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .impact-grid {
+    grid-template-columns: 1fr;
+    margin-top: var(--space-xl);
+  }
+
+  .reason-item {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .reason-number {
+    font-size: 2rem;
+  }
+
+  .reason-item:hover {
+    transform: none;
+  }
+}

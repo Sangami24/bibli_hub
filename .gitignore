@@ -1,0 +1,18 @@
+node_modules/
+.env
+.DS_Store
+dist/
+build/
+*.db
+*.sqlite
+*.sqlite3
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

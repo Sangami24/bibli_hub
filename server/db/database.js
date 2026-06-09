@@ -27,7 +27,9 @@ async function initDb() {
     const schemaStr = fs.readFileSync(SCHEMA_PATH, 'utf8');
     
     // Basic split by semicolon to run statements (simple schema handling)
-    const statements = schemaStr.split(';').map(s => s.trim()).filter(s => s.length > 0);
+    // Also strip comments which cause 400 errors on Turso HTTP
+    const cleanSchema = schemaStr.replace(/--.*$/gm, '').trim();
+    const statements = cleanSchema.split(';').map(s => s.trim()).filter(s => s.length > 0);
     for (const stmt of statements) {
       try {
         await db.execute(stmt);

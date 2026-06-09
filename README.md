@@ -148,36 +148,11 @@ Bibli-Hub
 
 ---
 
-## Challenges Faced
-
-Some of the major challenges during development included:
-
-* Designing a fair point-based exchange system
-* Implementing secure authentication and authorization
-* Managing user sessions with JWT
-* Integrating Google OAuth with existing authentication flows
-* Migrating database operations to a cloud-hosted Turso instance
-
-These challenges provided valuable experience in full-stack application development and backend system design.
-
----
-
-## Future Improvements
-
-* Advanced search and filtering
-* Book recommendation system
-* Admin moderation panel
-* User reviews and ratings
-* Real-time notifications
-* Book condition verification system
-
----
 
 ## Developer
 
 **Achal Sangami**
 
-Computer Science & Engineering Student
 
 This project was built to explore modern web development concepts while addressing a simple real-world problem: making books more accessible through community sharing.
 

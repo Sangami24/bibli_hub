@@ -101,13 +101,14 @@ router.post('/google', async (req, res) => {
       return res.status(400).json({ error: 'Google credential is required.' });
     }
 
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-    const ticket = await client.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
+    const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`);
+    const payload = await response.json();
 
-    const payload = ticket.getPayload();
+    if (!response.ok || payload.aud !== process.env.GOOGLE_CLIENT_ID) {
+      console.error('Google token verification failed:', payload);
+      return res.status(401).json({ error: 'Invalid Google credential.' });
+    }
+
     const { sub: googleId, email, name, picture } = payload;
 
     const db = getDb();

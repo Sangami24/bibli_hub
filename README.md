@@ -1,19 +1,45 @@
 # 📚 Bibli Hub — Book Exchange Platform
 
-> Give a book. Get a book. Change a life.
+> **Live Demo:** [Link to Vercel here] 
+> *(Note: Replace the link above with your live Vercel URL once deployed)*
 
-Bibli Hub is a web platform where users can donate books, earn points, and use those points to claim other donated books. It promotes book reuse and sustainability.
+> **Demo Video:** [Insert video here by dragging and dropping your MP4 file]
+
+Bibli Hub is a full-stack web platform where users can donate books, earn points, and use those points to claim other donated books. It promotes book reuse and sustainability within communities.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Features
+
+- **User Authentication** — Secure login/registration with JWT and bcrypt.
+- **Google Sign-In** — One-click OAuth login via Google Identity Services.
+- **Book Donation System** — Donate books and earn points instantly.
+- **Book Claiming** — Browse and claim books using points instead of money.
+- **Cloud Database** — Uses Turso Edge Database for lightning-fast, persistent storage.
+- **User Dashboard** — Track donations, orders, points, and money saved.
+- **Responsive Design** — Fully optimized for mobile, tablet, and desktop viewing.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | React, Vite, React Router DOM |
+| **Styling** | Vanilla CSS (Flexbox/Grid, Custom Properties) |
+| **Backend** | Node.js, Express.js |
+| **Database** | Turso Cloud Database (LibSQL/SQLite at the edge) |
+| **Auth** | JSON Web Tokens (JWT), Google OAuth 2.0 |
+| **Email** | Twilio SendGrid (for password resets) |
+
+---
+
+## 💻 Running the Project Locally
 
 ### Prerequisites
-- **Node.js** 18+ installed
-- **npm** (comes with Node.js)
+- Node.js 18+ installed
 
 ### 1. Install Dependencies
-
 ```bash
 # Install server dependencies
 cd server
@@ -24,51 +50,29 @@ cd ../client
 npm install
 ```
 
-### 2. Start the Server
+### 2. Environment Variables
+Create a `.env` file in the `/server` directory and add the following:
+```env
+PORT=3001
+JWT_SECRET=your_super_secret_jwt_key
+TURSO_DATABASE_URL=your_turso_db_url
+TURSO_AUTH_TOKEN=your_turso_auth_token
+```
 
+### 3. Start the Application
+Open two separate terminal windows.
+
+**Terminal 1 (Backend):**
 ```bash
 cd server
 npm run dev
 ```
 
-The API will run on `http://localhost:3001`.
-
-### 3. Start the Client
-
-In a new terminal:
-
+**Terminal 2 (Frontend):**
 ```bash
 cd client
 npm run dev
 ```
-
-The app will open at `http://localhost:5173`.
-
----
-
-## 🔐 Optional Setup
-
-### Google OAuth
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project (or use existing)
-3. Enable the **Google Identity Services** API
-4. Create OAuth 2.0 credentials → Web Application
-5. Add `http://localhost:5173` to Authorized JavaScript origins
-6. Copy the **Client ID** and add to `server/.env`:
-   ```
-   GOOGLE_CLIENT_ID=your_client_id_here
-   ```
-
-### Twilio SendGrid (Password Reset Emails)
-1. Sign up at [SendGrid](https://app.sendgrid.com/)
-2. Create an API key
-3. Add to `server/.env`:
-   ```
-   SENDGRID_API_KEY=your_api_key_here
-   SENDGRID_FROM_EMAIL=noreply@yourdomain.com
-   ```
-
-> **Note:** Without SendGrid configured, password reset tokens are logged to the server console instead.
 
 ---
 
@@ -76,47 +80,19 @@ The app will open at `http://localhost:5173`.
 
 ```
 Bibli Hub/
-├── client/              # React frontend (Vite)
+├── client/              # React frontend
 │   ├── src/
 │   │   ├── components/  # Reusable UI components
-│   │   ├── pages/       # Page components
+│   │   ├── pages/       # Page views
 │   │   ├── context/     # Auth state management
-│   │   └── services/    # API client
-│   └── ...
-├── server/              # Express.js backend
-│   ├── db/              # SQLite database
-│   ├── middleware/       # JWT auth
-│   ├── routes/          # API routes
-│   └── services/        # Email service
+│   │   └── services/    # API requests
+├── server/              # Node.js/Express backend
+│   ├── db/              # Turso Database configuration
+│   ├── middleware/       # JWT authentication logic
+│   ├── routes/          # RESTful API endpoints
+│   └── services/        # Email and Point calculation services
 └── README.md
 ```
 
 ---
-
-## ⭐ Features
-
-- **User Authentication** — Register, Login, Forgot/Reset Password
-- **Google Sign-In** — One-click login with Google
-- **Book Donation** — Donate books and earn 10 points each
-- **Book Claiming** — Browse and claim books using points
-- **Doorstep Pickup** — Books picked up within 3-5 business days
-- **User Dashboard** — Track donations, orders, and points
-- **Profile Management** — Edit address and personal info
-- **Responsive Design** — Works on mobile, tablet, and desktop
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React + Vite |
-| Styling | Vanilla CSS |
-| Backend | Express.js |
-| Database | SQLite (better-sqlite3) |
-| Auth | JWT + bcrypt |
-| Email | Twilio SendGrid |
-
----
-
 Made with ❤️ for a greener planet 🌱

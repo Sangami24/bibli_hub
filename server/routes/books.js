@@ -7,7 +7,7 @@ const { calculatePoints, estimatePrice, getEstimatedDeliveryDate, POINTS_MAP } =
 const router = express.Router();
 
 // GET /api/books - Browse available books
-router.get('/', optionalAuth, (req, res) => {
+router.get('/', optionalAuth, async (req, res) => {
   try {
     const db = getDb();
     const { category, search, grade, condition, page = 1, limit = 12 } = req.query;
@@ -43,12 +43,12 @@ router.get('/', optionalAuth, (req, res) => {
 
     // Get total count
     const countQuery = query.replace('SELECT b.*, u.name as donor_name', 'SELECT COUNT(*) as total');
-    const { total } = db.prepare(countQuery).get(...params);
+    const { total } = await db.prepare(countQuery).get(...params);
 
     query += ' ORDER BY b.created_at DESC LIMIT ? OFFSET ?';
     params.push(parseInt(limit), offset);
 
-    const books = db.prepare(query).all(...params);
+    const books = await db.prepare(query).all(...params);
 
     res.json({
       books,
@@ -66,7 +66,7 @@ router.get('/', optionalAuth, (req, res) => {
 });
 
 // GET /api/books/categories - Get all categories
-router.get('/categories', (req, res) => {
+router.get('/categories', async (req, res) => {
   const categories = [
     { id: 'textbook', label: 'School Textbooks', icon: '📖' },
     { id: 'fiction', label: 'Fiction & Novels', icon: '📚' },
@@ -81,15 +81,15 @@ router.get('/categories', (req, res) => {
 });
 
 // GET /api/books/points-table - Get points calculation table
-router.get('/points-table', (req, res) => {
+router.get('/points-table', async (req, res) => {
   res.json({ pointsTable: POINTS_MAP });
 });
 
 // GET /api/books/:id - Get single book details
-router.get('/:id', optionalAuth, (req, res) => {
+router.get('/:id', optionalAuth, async (req, res) => {
   try {
     const db = getDb();
-    const book = db.prepare(`
+    const book = await db.prepare(`
       SELECT b.*, u.name as donor_name, u.avatar_url as donor_avatar
       FROM books b
       JOIN users u ON b.donated_by = u.id
@@ -113,7 +113,7 @@ router.get('/:id', optionalAuth, (req, res) => {
 });
 
 // POST /api/books/donate - Donate a book
-router.post('/donate', authMiddleware, (req, res) => {
+router.post('/donate', authMiddleware, async (req, res) => {
   try {
     const {
       title, author, category, grade, condition, description,
@@ -137,23 +137,23 @@ router.post('/donate', authMiddleware, (req, res) => {
     const estimatedPrice = estimatePrice(category, condition);
 
     // Create book record
-    db.prepare(`
+    await db.prepare(`
       INSERT INTO books (id, title, author, category, grade, condition, description, donated_by, points_value, estimated_price, status)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'available')
     `).run(bookId, title, author, category, grade || null, condition, description || '', req.user.id, pointsValue, estimatedPrice);
 
     // Create donation/pickup record
-    db.prepare(`
+    await db.prepare(`
       INSERT INTO donations (id, user_id, book_id, pickup_address, pickup_city, pickup_state, pickup_pincode, pickup_phone, points_earned)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(donationId, req.user.id, bookId, pickup_address, pickup_city || '', pickup_state || '', pickup_pincode || '', pickup_phone || '', pointsValue);
 
     // Award points to user
-    db.prepare('UPDATE users SET points = points + ? WHERE id = ?').run(pointsValue, req.user.id);
+    await db.prepare('UPDATE users SET points = points + ? WHERE id = ?').run(pointsValue, req.user.id);
 
-    const updatedUser = db.prepare('SELECT points FROM users WHERE id = ?').get(req.user.id);
-    const book = db.prepare('SELECT * FROM books WHERE id = ?').get(bookId);
-    const donation = db.prepare('SELECT * FROM donations WHERE id = ?').get(donationId);
+    const updatedUser = await db.prepare('SELECT points FROM users WHERE id = ?').get(req.user.id);
+    const book = await db.prepare('SELECT * FROM books WHERE id = ?').get(bookId);
+    const donation = await db.prepare('SELECT * FROM donations WHERE id = ?').get(donationId);
 
     res.status(201).json({
       message: `Book donated successfully! You earned ${pointsValue} points.`,
@@ -168,7 +168,7 @@ router.post('/donate', authMiddleware, (req, res) => {
 });
 
 // POST /api/books/:id/claim - Claim a book using points
-router.post('/:id/claim', authMiddleware, (req, res) => {
+router.post('/:id/claim', authMiddleware, async (req, res) => {
   try {
     const { delivery_address, delivery_city, delivery_state, delivery_pincode, delivery_phone } = req.body;
 
@@ -177,7 +177,7 @@ router.post('/:id/claim', authMiddleware, (req, res) => {
     }
 
     const db = getDb();
-    const book = db.prepare('SELECT * FROM books WHERE id = ? AND status = ?').get(req.params.id, 'available');
+    const book = await db.prepare('SELECT * FROM books WHERE id = ? AND status = ?').get(req.params.id, 'available');
 
     if (!book) {
       return res.status(404).json({ error: 'Book not found or already claimed.' });
@@ -187,7 +187,7 @@ router.post('/:id/claim', authMiddleware, (req, res) => {
       return res.status(400).json({ error: 'You cannot claim your own donated book.' });
     }
 
-    const user = db.prepare('SELECT points FROM users WHERE id = ?').get(req.user.id);
+    const user = await db.prepare('SELECT points FROM users WHERE id = ?').get(req.user.id);
     if (user.points < book.points_value) {
       return res.status(400).json({
         error: `Insufficient points. You have ${user.points} points but need ${book.points_value}.`,
@@ -198,19 +198,19 @@ router.post('/:id/claim', authMiddleware, (req, res) => {
     const delivery = getEstimatedDeliveryDate();
 
     // Create order with delivery estimate and money saved
-    db.prepare(`
+    await db.prepare(`
       INSERT INTO orders (id, user_id, book_id, points_spent, money_saved, delivery_address, delivery_city, delivery_state, delivery_pincode, delivery_phone, estimated_delivery_date, estimated_delivery_days)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(orderId, req.user.id, book.id, book.points_value, book.estimated_price, delivery_address, delivery_city || '', delivery_state || '', delivery_pincode || '', delivery_phone || '', delivery.date, delivery.days);
 
     // Update book status
-    db.prepare('UPDATE books SET status = ? WHERE id = ?').run('claimed', book.id);
+    await db.prepare('UPDATE books SET status = ? WHERE id = ?').run('claimed', book.id);
 
     // Deduct points
-    db.prepare('UPDATE users SET points = points - ? WHERE id = ?').run(book.points_value, req.user.id);
+    await db.prepare('UPDATE users SET points = points - ? WHERE id = ?').run(book.points_value, req.user.id);
 
-    const updatedUser = db.prepare('SELECT points FROM users WHERE id = ?').get(req.user.id);
-    const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+    const updatedUser = await db.prepare('SELECT points FROM users WHERE id = ?').get(req.user.id);
+    const order = await db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
 
     res.status(201).json({
       message: `Book claimed! It will arrive by ${delivery.date} (${delivery.days} days). You saved ₹${book.estimated_price}!`,

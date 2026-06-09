@@ -34,7 +34,7 @@ router.post('/register', async (req, res) => {
     }
 
     const db = getDb();
-    const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email.toLowerCase());
+    const existing = await db.prepare('SELECT id FROM users WHERE email = ?').get(email.toLowerCase());
     if (existing) {
       return res.status(409).json({ error: 'An account with this email already exists.' });
     }
@@ -43,11 +43,11 @@ router.post('/register', async (req, res) => {
     const passwordHash = await bcrypt.hash(password, salt);
     const id = uuidv4();
 
-    db.prepare(
+    await db.prepare(
       'INSERT INTO users (id, email, password_hash, name, points) VALUES (?, ?, ?, ?, ?)'
     ).run(id, email.toLowerCase(), passwordHash, name, 0);
 
-    const user = db.prepare('SELECT id, email, name, points, avatar_url, created_at FROM users WHERE id = ?').get(id);
+    const user = await db.prepare('SELECT id, email, name, points, avatar_url, created_at FROM users WHERE id = ?').get(id);
     const token = generateToken(user);
 
     res.status(201).json({ token, user });
@@ -67,7 +67,7 @@ router.post('/login', async (req, res) => {
     }
 
     const db = getDb();
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email.toLowerCase());
+    const user = await db.prepare('SELECT * FROM users WHERE email = ?').get(email.toLowerCase());
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password.' });
@@ -111,20 +111,20 @@ router.post('/google', async (req, res) => {
     const { sub: googleId, email, name, picture } = payload;
 
     const db = getDb();
-    let user = db.prepare('SELECT * FROM users WHERE google_id = ? OR email = ?').get(googleId, email);
+    let user = await db.prepare('SELECT * FROM users WHERE google_id = ? OR email = ?').get(googleId, email);
 
     if (!user) {
       // Create new user
       const id = uuidv4();
-      db.prepare(
+      await db.prepare(
         'INSERT INTO users (id, email, name, google_id, avatar_url, points) VALUES (?, ?, ?, ?, ?, ?)'
       ).run(id, email, name, googleId, picture, 0);
-      user = db.prepare('SELECT * FROM users WHERE id = ?').get(id);
+      user = await db.prepare('SELECT * FROM users WHERE id = ?').get(id);
     } else if (!user.google_id) {
       // Link Google account to existing email user
-      db.prepare('UPDATE users SET google_id = ?, avatar_url = COALESCE(avatar_url, ?) WHERE id = ?')
+      await db.prepare('UPDATE users SET google_id = ?, avatar_url = COALESCE(avatar_url, ?) WHERE id = ?')
         .run(googleId, picture, user.id);
-      user = db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
+      user = await db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
     }
 
     const token = generateToken(user);
@@ -147,7 +147,7 @@ router.post('/forgot-password', async (req, res) => {
     }
 
     const db = getDb();
-    const user = db.prepare('SELECT id, name, email FROM users WHERE email = ?').get(email.toLowerCase());
+    const user = await db.prepare('SELECT id, name, email FROM users WHERE email = ?').get(email.toLowerCase());
 
     // Always respond with success to prevent email enumeration
     if (!user) {
@@ -155,13 +155,13 @@ router.post('/forgot-password', async (req, res) => {
     }
 
     // Invalidate any existing reset tokens
-    db.prepare('UPDATE password_resets SET used = 1 WHERE user_id = ? AND used = 0').run(user.id);
+    await db.prepare('UPDATE password_resets SET used = 1 WHERE user_id = ? AND used = 0').run(user.id);
 
     // Create new reset token
     const token = uuidv4();
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
 
-    db.prepare(
+    await db.prepare(
       'INSERT INTO password_resets (id, user_id, token, expires_at) VALUES (?, ?, ?, ?)'
     ).run(uuidv4(), user.id, token, expiresAt);
 
@@ -188,7 +188,7 @@ router.post('/reset-password', async (req, res) => {
     }
 
     const db = getDb();
-    const resetRecord = db.prepare(
+    const resetRecord = await db.prepare(
       'SELECT * FROM password_resets WHERE token = ? AND used = 0 AND expires_at > datetime("now")'
     ).get(token);
 
@@ -199,8 +199,8 @@ router.post('/reset-password', async (req, res) => {
     const salt = await bcrypt.genSalt(12);
     const passwordHash = await bcrypt.hash(newPassword, salt);
 
-    db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(passwordHash, resetRecord.user_id);
-    db.prepare('UPDATE password_resets SET used = 1 WHERE id = ?').run(resetRecord.id);
+    await db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(passwordHash, resetRecord.user_id);
+    await db.prepare('UPDATE password_resets SET used = 1 WHERE id = ?').run(resetRecord.id);
 
     res.json({ message: 'Password reset successfully. You can now log in.' });
   } catch (err) {
@@ -210,10 +210,10 @@ router.post('/reset-password', async (req, res) => {
 });
 
 // GET /api/auth/me
-router.get('/me', authMiddleware, (req, res) => {
+router.get('/me', authMiddleware, async (req, res) => {
   try {
     const db = getDb();
-    const user = db.prepare(
+    const user = await db.prepare(
       'SELECT id, email, name, phone, address_line1, address_line2, city, state, pincode, avatar_url, points, created_at FROM users WHERE id = ?'
     ).get(req.user.id);
 

@@ -5,10 +5,10 @@ const { authMiddleware } = require('../middleware/auth');
 const router = express.Router();
 
 // GET /api/pickup - Get user's pickup requests
-router.get('/', authMiddleware, (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   try {
     const db = getDb();
-    const pickups = db.prepare(`
+    const pickups = await db.prepare(`
       SELECT d.*, b.title, b.author, b.category
       FROM donations d
       JOIN books b ON d.book_id = b.id
@@ -24,10 +24,10 @@ router.get('/', authMiddleware, (req, res) => {
 });
 
 // GET /api/pickup/:id - Get single pickup details
-router.get('/:id', authMiddleware, (req, res) => {
+router.get('/:id', authMiddleware, async (req, res) => {
   try {
     const db = getDb();
-    const pickup = db.prepare(`
+    const pickup = await db.prepare(`
       SELECT d.*, b.title, b.author, b.category, b.condition
       FROM donations d
       JOIN books b ON d.book_id = b.id

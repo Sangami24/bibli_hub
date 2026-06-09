@@ -18,6 +18,8 @@ async function request(endpoint, options = {}) {
 
   const response = await fetch(`${API_BASE}${endpoint}`, config);
 
+  const data = await response.json().catch(() => ({}));
+
   if (response.status === 401) {
     localStorage.removeItem('biblihub_token');
     localStorage.removeItem('biblihub_user');
@@ -25,10 +27,8 @@ async function request(endpoint, options = {}) {
     if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/register')) {
       window.location.href = '/login';
     }
-    throw new Error('Session expired. Please log in again.');
+    throw new Error(data.error || 'Session expired. Please log in again.');
   }
-
-  const data = await response.json();
 
   if (!response.ok) {
     throw new Error(data.error || 'Something went wrong.');

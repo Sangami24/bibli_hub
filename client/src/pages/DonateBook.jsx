@@ -3,6 +3,24 @@ import { useAuth } from '../context/AuthContext';
 import { booksAPI } from '../services/api';
 import './DonateBook.css';
 
+// Points calculation based on Category × Condition
+const POINTS_MAP = {
+  competitive: { new: 20, like_new: 17, good: 14, fair: 10 },
+  textbook:    { new: 15, like_new: 13, good: 10, fair: 7 },
+  reference:   { new: 15, like_new: 13, good: 10, fair: 7 },
+  non_fiction: { new: 12, like_new: 10, good: 8,  fair: 6 },
+  fiction:     { new: 10, like_new: 8,  good: 7,  fair: 5 },
+  children:    { new: 10, like_new: 8,  good: 7,  fair: 5 },
+  comics:      { new: 8,  like_new: 7,  good: 5,  fair: 4 },
+  other:       { new: 8,  like_new: 7,  good: 5,  fair: 4 },
+};
+
+function calculateExpectedPoints(category, condition) {
+  if (!category || !condition) return 10; // Default
+  const catMap = POINTS_MAP[category] || POINTS_MAP.other;
+  return catMap[condition] || catMap.good;
+}
+
 export default function DonateBook() {
   const { user, updateUser } = useAuth();
   const [form, setForm] = useState({
@@ -14,6 +32,8 @@ export default function DonateBook() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState('');
+
+  const expectedPoints = calculateExpectedPoints(form.category, form.condition);
 
   const handleChange = (e) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -179,7 +199,7 @@ export default function DonateBook() {
               </div>
 
               <button type="submit" className="btn btn-primary btn-lg donate-submit" disabled={loading} id="donate-submit-btn">
-                {loading ? 'Submitting...' : '📦 Donate & Earn 10 Points'}
+                {loading ? 'Submitting...' : `📦 Donate & Earn ${expectedPoints} Points`}
               </button>
             </form>
           </div>
@@ -205,7 +225,7 @@ export default function DonateBook() {
                 <div className="info-step-num">3</div>
                 <div>
                   <strong>Earn points instantly</strong>
-                  <p>Get 10 points credited right away!</p>
+                  <p>Get {expectedPoints} points credited right away!</p>
                 </div>
               </div>
               <div className="donate-info-step">
@@ -223,7 +243,7 @@ export default function DonateBook() {
                 <span className="current-points-value">⭐ {user?.points || 0}</span>
                 <span className="current-points-label">Current Balance</span>
               </div>
-              <p className="current-points-hint">After donation: ⭐ {(user?.points || 0) + 10} points</p>
+              <p className="current-points-hint">After donation: ⭐ {(user?.points || 0) + expectedPoints} points</p>
             </div>
           </div>
         </div>

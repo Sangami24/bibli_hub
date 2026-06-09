@@ -6,6 +6,19 @@ const { calculatePoints, estimatePrice, getEstimatedDeliveryDate, POINTS_MAP } =
 
 const router = express.Router();
 
+async function fetchCover(title) {
+  try {
+    const response = await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=3`);
+    const data = await response.json();
+    for (const doc of data.docs) {
+      if (doc.cover_i) {
+        return `https://covers.openlibrary.org/b/id/${doc.cover_i}-L.jpg`;
+      }
+    }
+  } catch(e) {}
+  return null;
+}
+
 // GET /api/books - Browse available books
 router.get('/', optionalAuth, async (req, res) => {
   try {
@@ -136,11 +149,14 @@ router.post('/donate', authMiddleware, async (req, res) => {
     const pointsValue = calculatePoints(category, condition);
     const estimatedPrice = estimatePrice(category, condition);
 
+    // Fetch cover asynchronously from OpenLibrary
+    const coverImage = await fetchCover(title);
+
     // Create book record
     await db.prepare(`
-      INSERT INTO books (id, title, author, category, grade, condition, description, donated_by, points_value, estimated_price, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'available')
-    `).run(bookId, title, author, category, grade || null, condition, description || '', req.user.id, pointsValue, estimatedPrice);
+      INSERT INTO books (id, title, author, category, grade, condition, description, cover_image, donated_by, points_value, estimated_price, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'available')
+    `).run(bookId, title, author, category, grade || null, condition, description || '', coverImage, req.user.id, pointsValue, estimatedPrice);
 
     // Create donation/pickup record
     await db.prepare(`

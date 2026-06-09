@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import './BookCard.css';
 
 const conditionLabels = {
@@ -22,12 +23,13 @@ const categoryIcons = {
 export default function BookCard({ book, onClaim }) {
   const cond = conditionLabels[book.condition] || { label: book.condition, color: 'primary' };
   const icon = categoryIcons[book.category] || '📦';
+  const [imgError, setImgError] = useState(false);
 
   return (
     <div className="book-card" id={`book-card-${book.id}`}>
       <div className="book-card-cover">
-        {book.cover_image ? (
-          <img src={book.cover_image} alt={book.title} />
+        {book.cover_image && !imgError ? (
+          <img src={book.cover_image} alt={book.title} onError={() => setImgError(true)} />
         ) : (
           <div className="book-card-cover-placeholder">
             <span className="cover-icon">{icon}</span>

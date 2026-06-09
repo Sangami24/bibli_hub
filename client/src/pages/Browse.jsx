@@ -90,7 +90,7 @@ export default function Browse() {
       setClaimSuccess(data.message);
       updateUser({ ...user, points: data.newPoints });
       setBooks(prev => prev.filter(b => b.id !== claimModal.id));
-      setTimeout(() => { setClaimModal(null); setClaimSuccess(''); }, 2000);
+      // Removed auto-close timeout so user can read the message
     } catch (err) {
       setClaimError(err.message);
     } finally {
@@ -196,6 +196,7 @@ export default function Browse() {
                   <div className="auth-success-icon">🎉</div>
                   <h2>Book Claimed!</h2>
                   <p>{claimSuccess}</p>
+                  <button className="btn btn-primary" onClick={() => { setClaimModal(null); setClaimSuccess(''); }} style={{ marginTop: '20px', width: '100%' }}>Okay</button>
                 </div>
               ) : (
                 <>

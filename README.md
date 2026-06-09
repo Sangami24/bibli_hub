@@ -1,106 +1,184 @@
-# 📚 Bibli Hub — Book Exchange Platform
+# 📚 Bibli Hub
 
-> **Live Demo:** [Link to Vercel here] 
-> *(Note: Replace the link above with your live Vercel URL once deployed)*
+### A Community-Powered Book Exchange Platform
 
-> **Demo Video:** 
-> https://github.com/user-attachments/assets/2435f78b-2259-4263-8495-3cbab8ff3165
+**Live Demo:** [https://bibli-hub.vercel.app/]
 
-Bibli Hub is a community-driven full-stack web platform where users can donate books, earn points, and use those points to claim other donated books. It promotes book reuse and sustainability within communities.
 
----
 
-## 🚀 Features
+https://github.com/user-attachments/assets/63098087-48b3-4e8c-9183-afb5069b6a95
 
-- **User Authentication** — Secure login/registration with JWT and bcrypt.
-- **Google Sign-In** — One-click OAuth login via Google Identity Services.
-- **Book Donation System** — Donate books and earn points instantly.
-- **Book Claiming** — Browse and claim books using points instead of money.
-- **Cloud Database** — Uses Turso Edge Database for lightning-fast, persistent storage.
-- **User Dashboard** — Track donations, orders, points, and money saved.
-- **Responsive Design** — Fully optimized for mobile, tablet, and desktop viewing.
 
 ---
 
-## 🛠️ Tech Stack
+## About the Project
 
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | React, Vite, React Router DOM |
-| **Styling** | Vanilla CSS (Flexbox/Grid, Custom Properties) |
-| **Backend** | Node.js, Express.js |
-| **Database** | Turso Cloud Database (LibSQL/SQLite at the edge) |
-| **Auth** | JSON Web Tokens (JWT), Google OAuth 2.0 |
-| **Email** | Twilio SendGrid (for password resets) |
+Bibli Hub was created to encourage book sharing and reduce unnecessary purchases of books that are often used only once. The platform allows users to donate books they no longer need, earn points for their contributions, and use those points to request books donated by other members of the community.
+
+Instead of buying and selling books, Bibli Hub focuses on creating a simple exchange system that keeps books circulating among readers while promoting sustainable resource sharing.
+
+This project was developed as a full-stack web application to gain hands-on experience with authentication, database management, REST APIs, and modern frontend development.
 
 ---
 
-## 💻 Running the Project Locally
+## Key Features
+
+### User Authentication
+
+* Secure user registration and login
+* JWT-based authentication
+* Password hashing using bcrypt
+* Google OAuth login integration
+* Password reset functionality via email
+
+### Book Exchange System
+
+* Donate books and earn reward points
+* Browse books donated by other users
+* Claim books using accumulated points
+* Simple point-based exchange model
+
+### User Dashboard
+
+* View donated and claimed books
+* Track available points
+* Monitor activity and savings
+* Manage personal profile information
+
+### Database & Storage
+
+* Cloud-hosted Turso database
+* Persistent storage for users and books
+* Fast database access using LibSQL
+
+### Responsive User Interface
+
+* Mobile-friendly design
+* Optimized layouts for tablets and desktops
+* Clean and straightforward user experience
+
+---
+
+## Tech Stack
+
+| Category       | Technology                    |
+| -------------- | ----------------------------- |
+| Frontend       | React, Vite, React Router DOM |
+| Backend        | Node.js, Express.js           |
+| Database       | Turso (LibSQL)                |
+| Authentication | JWT, bcrypt, Google OAuth     |
+| Email Services | Twilio SendGrid               |
+| Styling        | Vanilla CSS                   |
+
+---
+
+## Running the Project Locally
 
 ### Prerequisites
-- Node.js 18+ installed
 
-### 1. Install Dependencies
+* Node.js 18 or later
+* npm
+
+### Install Dependencies
+
 ```bash
-# Install server dependencies
 cd server
 npm install
 
-# Install client dependencies
 cd ../client
 npm install
 ```
 
-### 2. Environment Variables
-Create a `.env` file in the `/server` directory and add the following:
+### Configure Environment Variables
+
+Create a `.env` file inside the `server` directory.
+
 ```env
 PORT=3001
-JWT_SECRET=your_super_secret_jwt_key
-TURSO_DATABASE_URL=your_turso_db_url
-TURSO_AUTH_TOKEN=your_turso_auth_token
+JWT_SECRET=your_secret_key
+
+TURSO_DATABASE_URL=your_database_url
+TURSO_AUTH_TOKEN=your_auth_token
 ```
 
-### 3. Start the Application
-Open two separate terminal windows.
+### Start the Backend
 
-**Terminal 1 (Backend):**
 ```bash
 cd server
 npm run dev
 ```
 
-**Terminal 2 (Frontend):**
+### Start the Frontend
+
+Open a second terminal window:
+
 ```bash
 cd client
 npm run dev
 ```
 
----
-
-## 📁 Project Structure
+The frontend will run on:
 
 ```text
-Bibli Hub/
-├── client/              # React frontend
-│   ├── src/
-│   │   ├── components/  # Reusable UI components
-│   │   ├── pages/       # Page views
-│   │   ├── context/     # Auth state management
-│   │   └── services/    # API requests
-├── server/              # Node.js/Express backend
-│   ├── db/              # Turso Database configuration
-│   ├── middleware/       # JWT authentication logic
-│   ├── routes/          # RESTful API endpoints
-│   └── services/        # Email and Point calculation services
+http://localhost:5173
+```
+
+---
+
+## Project Structure
+
+```text
+Bibli-Hub
+│
+├── client
+│   ├── src
+│   │   ├── components
+│   │   ├── pages
+│   │   ├── context
+│   │   └── services
+│
+├── server
+│   ├── db
+│   ├── middleware
+│   ├── routes
+│   └── services
+│
 └── README.md
 ```
 
 ---
-## 👨‍💻 Developed By
+
+## Challenges Faced
+
+Some of the major challenges during development included:
+
+* Designing a fair point-based exchange system
+* Implementing secure authentication and authorization
+* Managing user sessions with JWT
+* Integrating Google OAuth with existing authentication flows
+* Migrating database operations to a cloud-hosted Turso instance
+
+These challenges provided valuable experience in full-stack application development and backend system design.
+
+---
+
+## Future Improvements
+
+* Advanced search and filtering
+* Book recommendation system
+* Admin moderation panel
+* User reviews and ratings
+* Real-time notifications
+* Book condition verification system
+
+---
+
+## Developer
 
 **Achal Sangami**
 
-Built as a full-stack web application to demonstrate authentication, database management, REST API development, and responsive frontend design while promoting sustainable book sharing.
+Computer Science & Engineering Student
 
-*"A book shared is knowledge multiplied."* 📚
-Made with ❤️ for a greener planet 🌱
+This project was built to explore modern web development concepts while addressing a simple real-world problem: making books more accessible through community sharing.
+
+> "A book shared is knowledge multiplied."

@@ -2,7 +2,7 @@
 
 ### A Community-Powered Book Exchange Platform
 
-**Live Demo:** [https://bibli-hub.vercel.app/]
+[Launch Bibli Hub](https://bibli-hub.vercel.app/)
 
 
 
